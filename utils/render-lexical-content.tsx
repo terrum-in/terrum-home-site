@@ -1,4 +1,7 @@
-const renderLexicalContent = (nodes: any[]): JSX.Element[] | null => {
+const renderLexicalContent = (
+  nodes: any[],
+  linkColor: string = "text-blue-500"
+): JSX.Element[] | null => {
   return nodes.map((node, index) => {
     if (node.type === "text") {
       return node.text;
@@ -7,7 +10,7 @@ const renderLexicalContent = (nodes: any[]): JSX.Element[] | null => {
     if (node.type === "paragraph") {
       return (
         <p key={index} className="mb-2">
-          {renderLexicalContent(node.children || [])}
+          {renderLexicalContent(node.children || [], linkColor)}
         </p>
       );
     }
@@ -19,9 +22,9 @@ const renderLexicalContent = (nodes: any[]): JSX.Element[] | null => {
           href={node.fields.url}
           target={node.fields.newTab ? "_blank" : "_self"}
           rel={node.fields.newTab ? "noopener noreferrer" : undefined}
-          className="text-blue-500 underline"
+          className={`${linkColor} underline`}
         >
-          {renderLexicalContent(node.children || [])}
+          {renderLexicalContent(node.children || [], linkColor)}
         </a>
       );
     }
@@ -30,7 +33,7 @@ const renderLexicalContent = (nodes: any[]): JSX.Element[] | null => {
       if (node.listType === "check") {
         return (
           <ul key={index} className="ml-5 space-y-1">
-            {renderLexicalContent(node.children || [])}
+            {renderLexicalContent(node.children || [], linkColor)}
           </ul>
         );
       }
@@ -41,7 +44,7 @@ const renderLexicalContent = (nodes: any[]): JSX.Element[] | null => {
 
       return (
         <ListTag key={index} className={`ml-5 ${listStyle} list-inside`}>
-          {renderLexicalContent(node.children || [])}
+          {renderLexicalContent(node.children || [], linkColor)}
         </ListTag>
       );
     }
@@ -56,12 +59,16 @@ const renderLexicalContent = (nodes: any[]): JSX.Element[] | null => {
               readOnly
               className="mr-2"
             />
-            {renderLexicalContent(node.children || [])}
+            {renderLexicalContent(node.children || [], linkColor)}
           </li>
         );
       }
 
-      return <li key={index}>{renderLexicalContent(node.children || [])}</li>;
+      return (
+        <li key={index}>
+          {renderLexicalContent(node.children || [], linkColor)}
+        </li>
+      );
     }
 
     if (node.type === "heading") {
@@ -82,7 +89,7 @@ const renderLexicalContent = (nodes: any[]): JSX.Element[] | null => {
             headingStyles[node.tag as keyof typeof headingStyles] || "font-bold"
           }
         >
-          {renderLexicalContent(node.children || [])}
+          {renderLexicalContent(node.children || [], linkColor)}
         </HeadingTag>
       );
     }
@@ -93,7 +100,7 @@ const renderLexicalContent = (nodes: any[]): JSX.Element[] | null => {
           key={index}
           className="border-l-4 pl-3 italic text-gray-700"
         >
-          {renderLexicalContent(node.children || [])}
+          {renderLexicalContent(node.children || [], linkColor)}
         </blockquote>
       );
     }
