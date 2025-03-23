@@ -34,7 +34,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "utils/render-lexical-content.tsx"  ],
   "exclude": [
     "node_modules"
   ]
