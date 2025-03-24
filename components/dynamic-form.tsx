@@ -5,7 +5,7 @@ import renderLexicalContent from "@/utils/render-lexical-content";
 import { useState, ChangeEvent, FormEvent } from "react";
 import Razorpay from "razorpay";
 import { FormSubmissionResponse } from "@/types/payload-cms/form-submission";
-import { ConfirmationDialog } from "@/components/ConfirmationDialog";
+import { ConfirmationDialog } from "@/components/events/confirmation-dialog";
 
 const DynamicForm: React.FC<{
   form: FormData;

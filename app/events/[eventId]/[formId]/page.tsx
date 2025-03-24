@@ -1,8 +1,8 @@
-import DynamicForm from "@/components/DynamicForm";
+import DynamicForm from "@/components/dynamic-form";
 import { Event } from "@/types/cms-event";
 import { FormData } from "@/types/lexical-content";
 import { notFound } from "next/navigation";
-import EventsHeader from "@/components/events/EventsHeader";
+import EventsHeader from "@/components/events/events-header";
 
 const fetchForm = async (formID: string): Promise<FormData | null> => {
   try {

@@ -23,7 +23,7 @@ import { Badge } from "@/components/ui/badge";
 import renderLexicalContent from "@/utils/render-lexical-content";
 import { lexicalJsonToPlainText } from "@/utils/format-lexical-content";
 import { Event } from "@/types/cms-event";
-import EventsHeader from "@/components/events/EventsHeader";
+import EventsHeader from "@/components/events/events-header";
 
 type Props = {
   params: Promise<{ eventId: string }>;
