@@ -228,82 +228,103 @@ const DynamicForm: React.FC<{
 
   return (
     <>
-      <form
-        onSubmit={handleSubmit}
-        className="max-w-lg mx-auto p-4 space-y-4 border rounded-lg shadow md:max-w-2xl lg:max-w-3xl my-8"
-      >
-        <h2 className="text-2xl font-bold">{form.title}</h2>
+      <div className="min-h-screen" style={{ backgroundColor: "#7D4546" }}>
+        <main className="container mx-auto px-4 py-8 pb-16">
+          <div className="bg-white rounded-lg shadow-xl p-6 md:p-8 relative z-10 max-w-4xl mx-auto">
+            <div className="mb-6">
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                {form.title}
+              </h1>
+            </div>
 
-        {form.fields.map((field) => {
-          switch (field.blockType) {
-            case "message":
-              return (
-                <div key={field.id} className="p-4 bg-gray-100 rounded-md">
-                  {field.message?.root?.children
-                    ? renderLexicalContent(field.message.root.children)
-                    : null}
-                </div>
-              );
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {form.fields.map((field) => {
+                switch (field.blockType) {
+                  case "message":
+                    return (
+                      <div
+                        key={field.id}
+                        className="prose max-w-none bg-gray-50 p-4 rounded-lg"
+                      >
+                        {field.message?.root?.children
+                          ? renderLexicalContent(field.message.root.children)
+                          : null}
+                      </div>
+                    );
 
-            case "select":
-              return (
-                <div key={field.id} className="flex flex-col">
-                  <label className="font-medium">{field.label}</label>
-                  <select
-                    name={field.name}
-                    required={field.required}
-                    onChange={handleChange}
-                    className="border p-2 rounded"
-                  >
-                    <option value="">Select an option</option>
-                    {field.options?.map((opt) => (
-                      <option key={opt.id} value={opt.value}>
-                        {opt.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              );
+                  case "select":
+                    return (
+                      <div key={field.id} className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700">
+                          {field.label}
+                        </label>
+                        <select
+                          name={field.name}
+                          required={field.required}
+                          onChange={handleChange}
+                          className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-[#7D4546] focus:border-transparent"
+                        >
+                          <option value="">Select an option</option>
+                          {field.options?.map((opt) => (
+                            <option key={opt.id} value={opt.value}>
+                              {opt.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    );
 
-            case "checkbox":
-              return (
-                <div key={field.id} className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    name={field.name}
-                    onChange={handleChange}
-                    className="h-4 w-4"
-                  />
-                  <label className="text-gray-700">{field.label}</label>
-                </div>
-              );
+                  case "checkbox":
+                    return (
+                      <div
+                        key={field.id}
+                        className="flex items-center space-x-3"
+                      >
+                        <input
+                          type="checkbox"
+                          name={field.name}
+                          onChange={handleChange}
+                          className="h-4 w-4 rounded border-gray-300 text-[#7D4546] focus:ring-[#7D4546]"
+                        />
+                        <label className="text-sm text-gray-700">
+                          {field.label}
+                        </label>
+                      </div>
+                    );
 
-            default:
-              return (
-                <div key={field.id} className="flex flex-col">
-                  <label className="font-medium">
-                    {field.label}{" "}
-                    {field.required && <span className="text-red-500">*</span>}
-                  </label>
-                  <input
-                    type={field.blockType}
-                    name={field.name}
-                    required={field.required}
-                    onChange={handleChange}
-                    className="border p-2 rounded"
-                  />
-                </div>
-              );
-          }
-        })}
+                  default:
+                    return (
+                      <div key={field.id} className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700">
+                          {field.label}
+                          {field.required && (
+                            <span className="text-red-500 ml-1">*</span>
+                          )}
+                        </label>
+                        <input
+                          type={field.blockType}
+                          name={field.name}
+                          required={field.required}
+                          onChange={handleChange}
+                          className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-[#7D4546] focus:border-transparent"
+                        />
+                      </div>
+                    );
+                }
+              })}
 
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded w-full md:w-auto"
-        >
-          {price === 0 ? "Submit" : "Continue to payment"}
-        </button>
-      </form>
+              <div className="text-center pt-6">
+                <button
+                  type="submit"
+                  className="inline-block bg-[#7D4546] hover:bg-[#6a3a3b] text-white px-8 py-2 text-lg rounded-lg shadow-lg transition-all hover:shadow-xl"
+                >
+                  {price === 0 ? "Submit" : "Continue to payment"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </main>
+      </div>
 
       <ConfirmationDialog
         open={dialogOpen}
