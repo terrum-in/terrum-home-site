@@ -93,3 +93,19 @@
     @apply bg-background text-foreground;
     }
 }
+
+@keyframes wave-bounce {
+  0%, 100% { 
+    transform: translateY(0);
+  }
+  50% { 
+    transform: translateY(-20px);
+  }
+  75% {
+    transform: translateY(-10px);
+  }
+}
+
+.wave-bounce {
+  animation: wave-bounce 1s ease-in-out infinite;
+}

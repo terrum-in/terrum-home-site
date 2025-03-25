@@ -5,47 +5,20 @@ import renderLexicalContent from "@/utils/render-lexical-content";
 import { useState, ChangeEvent, FormEvent } from "react";
 import Razorpay from "razorpay";
 import { FormSubmissionResponse } from "@/types/payload-cms/form-submission";
-import { ConfirmationDialog } from "@/components/events/confirmation-dialog";
 
 const DynamicForm: React.FC<{
   form: FormData;
   price: number;
   eventId: number;
-}> = ({ form, price, eventId }) => {
-  const [formData, setFormData] = useState<Record<string, string | boolean>>(
-    {}
-  );
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogProps, setDialogProps] = useState<{
-    title: string;
-    description?: string;
-    showWhatsAppButton?: boolean;
-    redirectUrl?: string | null;
-  }>({
-    title: "",
-  });
-
-  const openConfirmationDialog = (
+  onConfirmation: (
     confirmationType: string,
     confirmationMessage?: string | null,
     redirectUrl?: string | null
-  ) => {
-    if (confirmationType === "message" && confirmationMessage) {
-      setDialogProps({
-        title: "Thank you for registering for the event! See you soon.",
-        description: `${confirmationMessage}`,
-      });
-    } else if (confirmationType === "redirect") {
-      setDialogProps({
-        title: "Thank you for registering for the event! See you soon.",
-        description:
-          "Join the WhatsApp community to continue being part of the event, it is mandatory to join the WhatsApp community, to keep track",
-        showWhatsAppButton: true,
-        redirectUrl,
-      });
-    }
-    setDialogOpen(true);
-  };
+  ) => void;
+}> = ({ form, price, eventId, onConfirmation }) => {
+  const [formData, setFormData] = useState<Record<string, string | boolean>>(
+    {}
+  );
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -103,8 +76,6 @@ const DynamicForm: React.FC<{
         description: "Test Transaction",
         order_id: order.id,
         handler: async function (response: any) {
-          console.log(response);
-
           // Send POST request to capture payment
           try {
             const captureResponse = await fetch(
@@ -127,12 +98,8 @@ const DynamicForm: React.FC<{
 
             console.log("Payment captured successfully");
 
-            // Open the confirmation dialog after successful payment capture
-            openConfirmationDialog(
-              confirmationType,
-              confirmationMessage,
-              redirectUrl
-            );
+            // Use the new onConfirmation prop instead of dialog
+            onConfirmation(confirmationType, confirmationMessage, redirectUrl);
           } catch (error) {
             console.error("Payment capture failed:", error);
           }
@@ -214,8 +181,8 @@ const DynamicForm: React.FC<{
           result.doc.id
         );
       } else {
-        // Open the confirmation dialog based on the form submission response
-        openConfirmationDialog(
+        // Use the new onConfirmation prop instead of dialog
+        onConfirmation(
           result.doc.form.confirmationType,
           result.doc.form.confirmationMessage,
           result.doc.form.redirect?.url
@@ -227,111 +194,100 @@ const DynamicForm: React.FC<{
   };
 
   return (
-    <>
-      <div className="min-h-screen" style={{ backgroundColor: "#7D4546" }}>
-        <main className="container mx-auto px-4 py-8 pb-16">
-          <div className="bg-white rounded-lg shadow-xl p-6 md:p-8 relative z-10 max-w-4xl mx-auto">
-            <div className="mb-6">
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                {form.title}
-              </h1>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {form.fields.map((field) => {
-                switch (field.blockType) {
-                  case "message":
-                    return (
-                      <div
-                        key={field.id}
-                        className="prose max-w-none bg-gray-50 p-4 rounded-lg"
-                      >
-                        {field.message?.root?.children
-                          ? renderLexicalContent(field.message.root.children)
-                          : null}
-                      </div>
-                    );
-
-                  case "select":
-                    return (
-                      <div key={field.id} className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">
-                          {field.label}
-                        </label>
-                        <select
-                          name={field.name}
-                          required={field.required}
-                          onChange={handleChange}
-                          className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-[#7D4546] focus:border-transparent"
-                        >
-                          <option value="">Select an option</option>
-                          {field.options?.map((opt) => (
-                            <option key={opt.id} value={opt.value}>
-                              {opt.label}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    );
-
-                  case "checkbox":
-                    return (
-                      <div
-                        key={field.id}
-                        className="flex items-center space-x-3"
-                      >
-                        <input
-                          type="checkbox"
-                          name={field.name}
-                          onChange={handleChange}
-                          className="h-4 w-4 rounded border-gray-300 text-[#7D4546] focus:ring-[#7D4546]"
-                        />
-                        <label className="text-sm text-gray-700">
-                          {field.label}
-                        </label>
-                      </div>
-                    );
-
-                  default:
-                    return (
-                      <div key={field.id} className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">
-                          {field.label}
-                          {field.required && (
-                            <span className="text-red-500 ml-1">*</span>
-                          )}
-                        </label>
-                        <input
-                          type={field.blockType}
-                          name={field.name}
-                          required={field.required}
-                          onChange={handleChange}
-                          className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-[#7D4546] focus:border-transparent"
-                        />
-                      </div>
-                    );
-                }
-              })}
-
-              <div className="text-center pt-6">
-                <button
-                  type="submit"
-                  className="inline-block bg-[#7D4546] hover:bg-[#6a3a3b] text-white px-8 py-2 text-lg rounded-lg shadow-lg transition-all hover:shadow-xl"
-                >
-                  {price === 0 ? "Submit" : "Continue to payment"}
-                </button>
-              </div>
-            </form>
+    <div className="min-h-screen" style={{ backgroundColor: "#7D4546" }}>
+      <main className="container mx-auto px-4 py-8 pb-16">
+        <div className="bg-white rounded-lg shadow-xl p-6 md:p-8 relative z-10 max-w-4xl mx-auto">
+          <div className="mb-6">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              {form.title}
+            </h1>
           </div>
-        </main>
-      </div>
 
-      <ConfirmationDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        {...dialogProps}
-      />
-    </>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {form.fields.map((field) => {
+              switch (field.blockType) {
+                case "message":
+                  return (
+                    <div
+                      key={field.id}
+                      className="prose max-w-none bg-gray-50 p-4 rounded-lg"
+                    >
+                      {field.message?.root?.children
+                        ? renderLexicalContent(field.message.root.children)
+                        : null}
+                    </div>
+                  );
+
+                case "select":
+                  return (
+                    <div key={field.id} className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        {field.label}
+                      </label>
+                      <select
+                        name={field.name}
+                        required={field.required}
+                        onChange={handleChange}
+                        className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-[#7D4546] focus:border-transparent"
+                      >
+                        <option value="">Select an option</option>
+                        {field.options?.map((opt) => (
+                          <option key={opt.id} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  );
+
+                case "checkbox":
+                  return (
+                    <div key={field.id} className="flex items-center space-x-3">
+                      <input
+                        type="checkbox"
+                        name={field.name}
+                        onChange={handleChange}
+                        className="h-4 w-4 rounded border-gray-300 text-[#7D4546] focus:ring-[#7D4546]"
+                      />
+                      <label className="text-sm text-gray-700">
+                        {field.label}
+                      </label>
+                    </div>
+                  );
+
+                default:
+                  return (
+                    <div key={field.id} className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        {field.label}
+                        {field.required && (
+                          <span className="text-red-500 ml-1">*</span>
+                        )}
+                      </label>
+                      <input
+                        type={field.blockType}
+                        name={field.name}
+                        required={field.required}
+                        onChange={handleChange}
+                        className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-[#7D4546] focus:border-transparent"
+                      />
+                    </div>
+                  );
+              }
+            })}
+
+            <div className="text-center pt-6">
+              <button
+                type="submit"
+                className="inline-block bg-[#7D4546] hover:bg-[#6a3a3b] text-white px-8 py-2 text-lg rounded-lg shadow-lg transition-all hover:shadow-xl"
+              >
+                {price === 0 ? "Submit" : "Continue to payment"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
   );
 };
 
