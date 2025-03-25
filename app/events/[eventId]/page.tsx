@@ -4,6 +4,8 @@ import { lexicalJsonToPlainText } from "@/utils/format-lexical-content";
 import { Event } from "@/types/cms-event";
 import EventsHeader from "@/components/events/events-header";
 import EventDetails from "@/components/events/event-details";
+import { formatDateRange } from "@/utils/date-formatters";
+import { formatTime } from "@/utils/time-formatters";
 
 type Props = {
   params: Promise<{ eventId: string }>;
@@ -111,41 +113,6 @@ async function getEvent(eventId: string): Promise<Event> {
   return res.json();
 }
 
-// Function to format date
-function formatDate(dateString: string) {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
-
-// Add this function after the formatDate function
-function formatDateRange(startDate: string, endDate: string) {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-
-  // Compare the dates (ignoring time)
-  const isSameDate = start.toDateString() === end.toDateString();
-
-  if (isSameDate) {
-    return formatDate(startDate);
-  }
-
-  return `${formatDate(startDate)} - ${formatDate(endDate)}`;
-}
-
-// Add this function after the formatDate function
-function formatTime(timeString: string) {
-  const date = new Date(timeString);
-  return date.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
-}
-
 export default async function EventPage({
   params,
 }: {
@@ -167,8 +134,6 @@ export default async function EventPage({
       <EventsHeader />
       <EventDetails
         event={event}
-        formatDateRange={formatDateRange}
-        formatTime={formatTime}
       />
     </>
   );

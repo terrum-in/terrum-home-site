@@ -2,17 +2,15 @@ import Image from "next/image";
 import { Calendar, Clock, MapPin } from "lucide-react";
 import { Event } from "@/types/cms-event";
 import renderLexicalContent from "@/utils/render-lexical-content";
+import { formatDateRange } from "@/utils/date-formatters";
+import { formatTime } from "@/utils/time-formatters";
 
 interface EventDetailsProps {
   event: Event;
-  formatDateRange: (startDate: string, endDate: string) => string;
-  formatTime: (timeString: string) => string;
 }
 
 export default function EventDetails({
   event,
-  formatDateRange,
-  formatTime,
 }: EventDetailsProps) {
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#7D4546" }}>

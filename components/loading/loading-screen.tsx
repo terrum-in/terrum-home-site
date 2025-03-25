@@ -4,8 +4,8 @@ import React from "react";
 
 const LoadingScreen = () => {
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#f0f4f0]">
-      <p className="text-2xl font-light text-[#3C5A3A] mb-8">
+    <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#f0f4f0] text-center">
+      <p className="text-2xl font-light text-[#3C5A3A] mb-8 px-4">
         Your patience is as valuable as clean air!
       </p>
 
@@ -28,7 +28,7 @@ const LoadingScreen = () => {
         ></div>
       </div>
 
-      <p className="text-sm text-[#607D6A] opacity-70 mt-8">
+      <p className="text-sm text-[#607D6A] opacity-70 mt-8 px-4">
         Hang on! We're almost there.
       </p>
     </div>
