@@ -2,16 +2,14 @@ import Image from "next/image";
 import { Calendar, Clock, MapPin } from "lucide-react";
 import { Event } from "@/types/cms-event";
 import renderLexicalContent from "@/utils/render-lexical-content";
-import { formatDateRange } from "@/utils/date-formatters";
+import { formatDate, formatDateRange } from "@/utils/date-formatters";
 import { formatTime } from "@/utils/time-formatters";
 
 interface EventDetailsProps {
   event: Event;
 }
 
-export default function EventDetails({
-  event,
-}: EventDetailsProps) {
+export default function EventDetails({ event }: EventDetailsProps) {
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#7D4546" }}>
       {/* Banner Image */}
@@ -70,24 +68,19 @@ export default function EventDetails({
           <div className="border-t border-gray-200 pt-6 mb-6">
             <h2 className="text-xl font-semibold mb-4">Event Schedule</h2>
             <div className="space-y-4">
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="font-medium">Day 1: March 25</h3>
-                <p className="text-sm text-gray-600">
-                  Opening ceremony, keynote speeches, and introductory workshops
-                </p>
-              </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="font-medium">Day 2: March 26</h3>
-                <p className="text-sm text-gray-600">
-                  Technical sessions, panel discussions, and networking lunch
-                </p>
-              </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="font-medium">Day 3: March 27</h3>
-                <p className="text-sm text-gray-600">
-                  Advanced workshops, career fair, and closing ceremony
-                </p>
-              </div>
+              {event.agenda_blocks.map((block) => (
+                <div key={block.id} className="bg-gray-50 p-4 rounded-lg">
+                  <h3 className="font-medium">
+                    {block.time}: {block.title}
+                  </h3>
+                  <p className="text-sm text-gray-600">{block.description}</p>
+                  {block.speaker && (
+                    <p className="text-sm text-gray-500">
+                      Speaker: {block.speaker}
+                    </p>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
 
@@ -99,9 +92,11 @@ export default function EventDetails({
             >
               Register Now
             </a>
-            <p className="mt-3 text-sm text-gray-500">
-              Early bird registration ends January 15, 2025
-            </p>
+            {event.early_bird_price && event.early_bird_end_date && (
+              <p className="mt-3 text-sm text-gray-500">
+                Early bird registration ends on {formatDate(event.early_bird_end_date)}
+              </p>
+            )}
           </div>
         </div>
       </main>

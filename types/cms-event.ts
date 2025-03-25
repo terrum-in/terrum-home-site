@@ -33,4 +33,17 @@ export interface Event {
   price: number; // New field
   event_uuid: string;
   form: number; // New field
+  agenda_blocks: Array<{
+    order: number;
+    parent: number;
+    path: string;
+    id: string;
+    time: string;
+    title: string;
+    speaker: string;
+    description: string;
+    block_name: string | null;
+  }>; // New field
+  early_bird_end_date: string;
+  early_bird_price: number; // New field
 }

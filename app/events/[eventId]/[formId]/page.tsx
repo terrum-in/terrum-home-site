@@ -105,6 +105,7 @@ export default function EventRegisterPage({
       <DynamicForm
         form={form}
         price={event.price}
+        earlyBirdPrice={event.early_bird_price}
         eventId={event.id}
         onConfirmation={handleConfirmation}
       />

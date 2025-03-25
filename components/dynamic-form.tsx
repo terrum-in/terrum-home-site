@@ -9,13 +9,14 @@ import { FormSubmissionResponse } from "@/types/payload-cms/form-submission";
 const DynamicForm: React.FC<{
   form: FormData;
   price: number;
+  earlyBirdPrice: number;
   eventId: number;
   onConfirmation: (
     confirmationType: string,
     confirmationMessage?: string | null,
     redirectUrl?: string | null
   ) => void;
-}> = ({ form, price, eventId, onConfirmation }) => {
+}> = ({ form, price, earlyBirdPrice, eventId, onConfirmation }) => {
   const [formData, setFormData] = useState<Record<string, string | boolean>>(
     {}
   );

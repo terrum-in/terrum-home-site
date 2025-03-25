@@ -16,6 +16,10 @@ function EventCard({ event, tall = false }: EventCardProps) {
         tall ? "h-[500px]" : "h-[400px]"
       }`}
     >
+      <a
+        href={`/events/${event.event_uuid}`}
+        className="absolute inset-0 z-10"
+      />
       <div className="absolute inset-0">
         <img
           src={event.image.presigned_url}
@@ -38,7 +42,9 @@ function EventCard({ event, tall = false }: EventCardProps) {
 
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4" />
-            <span className="text-sm">{formatDateRange(event.start_date, event.end_date)}</span>
+            <span className="text-sm">
+              {formatDateRange(event.start_date, event.end_date)}
+            </span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -87,8 +93,8 @@ export default async function EventsPage() {
               Upcoming Events
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Discover exciting workshops, meetups, and conferences happening in
-              your area. Join us to learn, connect, and grow together.
+              Discover exciting workshops, meetups, and conferences hosted by
+              Terrum. Join us to learn, connect, and grow together.
             </p>
           </div>
 
