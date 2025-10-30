@@ -2,7 +2,6 @@
 
 import { FormData } from "@/types/lexical-content";
 import { useState, ChangeEvent, FormEvent } from "react";
-import Razorpay from "razorpay";
 import { FormSubmissionResponse } from "@/types/payload-cms/form-submission";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { jsxConverters } from "@/utils/lexical-converters";
