@@ -222,8 +222,6 @@ Payment integration requirements:
 
 - Ensure the Razorpay Checkout script is available on pages that use `DynamicForm` (the code references `window.Razorpay`).
 - The backend endpoints `cms/payment/order/` and `cms/payment/capture/` must be implemented to talk to Razorpay servers securely with your secret key.
-- Ensure the Razorpay Checkout script is available on pages that use `DynamicForm` (the code references `window.Razorpay`).
-
 Caching notes:
 
 - The events list uses `cache: 'no-store'` to always get fresh data.
