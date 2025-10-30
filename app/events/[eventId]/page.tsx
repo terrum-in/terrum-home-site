@@ -4,8 +4,6 @@ import { lexicalJsonToPlainText } from "@/utils/format-lexical-content";
 import { Event } from "@/types/cms-event";
 import EventsHeader from "@/components/events/events-header";
 import EventDetails from "@/components/events/event-details";
-import { formatDateRange } from "@/utils/date-formatters";
-import { formatTime } from "@/utils/time-formatters";
 
 type Props = {
   params: Promise<{ eventId: string }>;

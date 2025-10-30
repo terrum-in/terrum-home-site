@@ -40,12 +40,12 @@ export default function EventRegisterPage({
             if (!res.ok) throw new Error("Failed to fetch event");
             return res.json();
           }),
-          fetch(`http://localhost:3000/api/forms/${params.formId}`).then(
-            (res) => {
-              if (!res.ok) throw new Error("Failed to fetch form");
-              return res.json();
-            }
-          ),
+          fetch(
+            `${process.env.NEXT_PUBLIC_CMS_API_URL}/api/forms/${params.formId}`
+          ).then((res) => {
+            if (!res.ok) throw new Error("Failed to fetch form");
+            return res.json();
+          }),
         ]);
 
         setEvent(eventData);

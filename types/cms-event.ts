@@ -1,38 +1,53 @@
+import type { SerializedEditorState, SerializedLexicalNode } from "lexical";
+
 export interface Event {
   id: number;
+  event_uuid: string;
   name: string;
-  description: {
-    root: {
-      type: string;
-      format: string;
-      indent: number;
-      version: number;
-      children: Array<any>; // Complex nested structure for rich text
-      direction: string;
-      textFormat: number;
-    };
-  };
+  description: SerializedEditorState<SerializedLexicalNode>; // unchanged
+
   image: {
     alt: string;
     presigned_url: string;
   };
-  venue: string | null;
+
+  // New location metadata from JSON
+  region: string | null;
+  country: string | null;
+  state: string | null;
   city: string | null;
-  locality: string | null;
+  neighbourhood: string | null;
+
+  venue: string | null;
+
   google_maps_link: string | null;
+
+  // Links (renamed/added to match JSON)
+  external_event_link: string | null;
+  payment_link: string | null;
+  meeting_link: string | null;
+
+  // Dates & times (ISO strings in JSON)
   start_date: string;
   end_date: string;
   start_time: string;
   end_time: string;
+
+  is_hosted_by_terrum: boolean;
   deleted: boolean;
   is_online: boolean;
-  is_online_and_offline: boolean; // New field
-  location: string | Record<string, any>; // Changed type to accept string format found in JSON
-  google_form_link: string | null;
-  payment_link: string | null;
-  price: number; // New field
-  event_uuid: string;
-  form: number; // New field
+  is_online_and_offline: boolean;
+
+  // WKB hex string or other shapes
+  location: string | Record<string, any>;
+
+  // Pricing (strings in JSON)
+  price: string;
+  early_bird_price: string;
+  early_bird_end_date: string;
+
+  form: number;
+
   agenda_blocks: Array<{
     order: number;
     parent: number;
@@ -43,7 +58,5 @@ export interface Event {
     speaker: string;
     description: string;
     block_name: string | null;
-  }>; // New field
-  early_bird_end_date: string;
-  early_bird_price: number; // New field
+  }>;
 }

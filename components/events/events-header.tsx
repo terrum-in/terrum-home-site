@@ -117,10 +117,6 @@ export default function EventsHeader() {
         <div className="flex flex-col items-center justify-center h-full space-y-8">
           {[
             "Resources",
-            "#events-and-experiences-section",
-            "#employee-engagement-section",
-            "#support-a-social-organisation-section",
-            "#open-source-database-section",
           ].map((item) => {
             const href =
               item === "Resources" ? "https://resources.terrum.in" : `${item}`;

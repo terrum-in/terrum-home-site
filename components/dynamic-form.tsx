@@ -1,22 +1,23 @@
 "use client";
 
 import { FormData } from "@/types/lexical-content";
-import renderLexicalContent from "@/utils/render-lexical-content";
 import { useState, ChangeEvent, FormEvent } from "react";
 import Razorpay from "razorpay";
 import { FormSubmissionResponse } from "@/types/payload-cms/form-submission";
+import { RichText } from "@payloadcms/richtext-lexical/react";
+import { jsxConverters } from "@/utils/lexical-converters";
 
 const DynamicForm: React.FC<{
   form: FormData;
-  price: number;
-  earlyBirdPrice: number;
+  price: string;
+  earlyBirdPrice: string;
   eventId: number;
   onConfirmation: (
     confirmationType: string,
     confirmationMessage?: string | null,
     redirectUrl?: string | null
   ) => void;
-}> = ({ form, price, earlyBirdPrice, eventId, onConfirmation }) => {
+}> = ({ form, price, earlyBirdPrice, eventId, onConfirmation }) => { 
   const [formData, setFormData] = useState<Record<string, string | boolean>>(
     {}
   );
@@ -46,17 +47,20 @@ const DynamicForm: React.FC<{
     formSubmissionId?: number
   ) => {
     try {
-      const response = await fetch("http://localhost:8000/cms/payment/order/", {
-        method: "POST",
-        body: JSON.stringify({
-          amount: price.toString(), // Convert number directly to string
-          currency: "INR",
-          form_submission_id: formSubmissionId,
-          event_id: eventId,
-          form_id: form.id,
-        }),
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API_URL}/cms/payment/order/`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            amount: Number(price),
+            currency: "INR",
+            form_submission_id: formSubmissionId,
+            event_id: eventId,
+            form_id: form.id,
+          }),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
@@ -64,7 +68,6 @@ const DynamicForm: React.FC<{
 
       const order = await response.json();
 
-      // Extract name, email, and contact from formData
       const name = formData["name"] as string;
       const email = formData["email"] as string;
       const contact = formData["contact"] as string;
@@ -80,7 +83,7 @@ const DynamicForm: React.FC<{
           // Send POST request to capture payment
           try {
             const captureResponse = await fetch(
-              "http://localhost:8000/cms/payment/capture/",
+              `${process.env.NEXT_PUBLIC_BASE_API_URL}/cms/payment/capture/`,
               {
                 method: "POST",
                 headers: {
@@ -149,14 +152,13 @@ const DynamicForm: React.FC<{
     }));
 
     const payload = {
-      form: form.id, // Assuming `form.id` contains the form identifier
+      form: form.id,
       submissionData,
     };
 
-    try {
-      // First, submit the form data
+    try {      
       const response = await fetch(
-        "http://localhost:3000/api/form-submissions",
+        `${process.env.NEXT_PUBLIC_CMS_API_URL}/api/form-submissions`,
         {
           method: "POST",
           headers: {
@@ -174,7 +176,7 @@ const DynamicForm: React.FC<{
       console.log("Form submitted successfully:", result);
 
       // After successful form submission, handle payment if price > 0
-      if (price !== 0) {
+      if (price !== "0.00") {
         await handlePayment(
           result.doc.form.confirmationType,
           result.doc.form.confirmationMessage,
@@ -213,9 +215,12 @@ const DynamicForm: React.FC<{
                       key={field.id}
                       className="prose max-w-none bg-gray-50 p-4 rounded-lg"
                     >
-                      {field.message?.root?.children
-                        ? renderLexicalContent(field.message.root.children)
-                        : null}
+                      {field.message ? (
+                        <RichText
+                          data={field.message}
+                          converters={jsxConverters}
+                        />
+                      ) : null}
                     </div>
                   );
 
@@ -282,7 +287,7 @@ const DynamicForm: React.FC<{
                 type="submit"
                 className="inline-block bg-[#7D4546] hover:bg-[#6a3a3b] text-white px-8 py-2 text-lg rounded-lg shadow-lg transition-all hover:shadow-xl"
               >
-                {price === 0 ? "Submit" : "Continue to payment"}
+                {price === "0.00" ? "Submit" : "Continue to payment"}
               </button>
             </div>
           </form>

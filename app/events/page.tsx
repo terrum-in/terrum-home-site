@@ -1,72 +1,18 @@
-import { Calendar, Clock, MapPin } from "lucide-react";
 import { Event } from "@/types/cms-event";
-import { formatDateRange } from "@/utils/date-formatters";
-import { formatTime } from "@/utils/time-formatters";
 import EventsHeader from "@/components/events/events-header";
-
-interface EventCardProps {
-  event: Event;
-  tall?: boolean;
-}
-
-function EventCard({ event, tall = false }: EventCardProps) {
-  return (
-    <div
-      className={`relative group overflow-hidden rounded-2xl bg-white shadow-lg transition-all duration-300 hover:shadow-xl ${
-        tall ? "h-[500px]" : "h-[400px]"
-      }`}
-    >
-      <a
-        href={`/events/${event.event_uuid}`}
-        className="absolute inset-0 z-10"
-      />
-      <div className="absolute inset-0">
-        <img
-          src={event.image.presigned_url}
-          alt={event.name}
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
-      </div>
-
-      <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-        <h3 className="text-2xl font-bold mb-3">{event.name}</h3>
-
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <MapPin className="w-4 h-4" />
-            <span className="text-sm">
-              {event.venue}, {event.locality}, {event.city}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4" />
-            <span className="text-sm">
-              {formatDateRange(event.start_date, event.end_date)}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4" />
-            <span className="text-sm">
-              {formatTime(event.start_time)} - {formatTime(event.end_time)}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+import EventCard from "@/components/events/event-card";
 
 export default async function EventsPage() {
   let events: Event[] = [];
   let error: string | null = null;
 
   try {
-    const response = await fetch("http://localhost:8000/cms/events/", {
-      cache: "no-store",
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}/cms/events/`,
+      {
+        cache: "no-store",
+      }
+    );
     if (!response.ok) {
       throw new Error("Failed to fetch events");
     }

@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import {useState} from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -40,7 +40,7 @@ export default function LandingHeader() {
 
       {/* Desktop Navigation */}
       <div className="hidden md:flex items-center space-x-8">
-        {["Resources"].map((item) =>
+        {["Resources", "Events"].map((item) =>
           item === "Resources" ? (
             <a
               data-umami-event="Open Resources Dashboard"
@@ -117,22 +117,48 @@ export default function LandingHeader() {
         <div className="flex flex-col items-center justify-center h-full space-y-8">
           {[
             "Resources",
+            "Events",
             "#events-and-experiences-section",
             "#employee-engagement-section",
             "#support-a-social-organisation-section",
             "#open-source-database-section",
           ].map((item) => {
-            const href =
-              item === "Resources" ? "https://resources.terrum.in" : `${item}`;
 
+            if (item === "Resources") {
+              return (
+                <a
+                  key={item}
+                  href="https://resources.terrum.in"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-white/80 font-medium"
+                  onClick={closeMenu}
+                >
+                  {formatSectionName(item)}
+                </a>
+              );
+            }
+
+            if (item === "Events") {
+              return (
+                <Link
+                  key={item}
+                  href="/events"
+                  className="text-white hover:text-white/80 font-medium"
+                  onClick={closeMenu}
+                >
+                  {item}
+                </Link>
+              );
+            }
+
+            // Anchor links for on-page sections
             return (
               <a
                 key={item}
-                href={href}
-                target={item === "Resources" ? "_blank" : "_self"} // Open external links in a new tab
-                rel={item === "Resources" ? "noopener noreferrer" : ""}
+                href={item}
                 className="text-white hover:text-white/80 font-medium"
-                onClick={closeMenu} // Close menu when clicked
+                onClick={closeMenu}
               >
                 {formatSectionName(item)}
               </a>

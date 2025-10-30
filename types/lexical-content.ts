@@ -1,3 +1,5 @@
+import type { SerializedEditorState, SerializedLexicalNode } from "lexical";
+
 export type FieldOption = {
   id: string;
   label: string;
@@ -18,11 +20,7 @@ export type FormField = {
     | "textarea"
     | "message";
   options?: FieldOption[];
-  message?: {
-    root?: {
-      children?: { children?: { text: string }[] }[];
-    };
-  };
+  message?: SerializedEditorState<SerializedLexicalNode>;
 };
 
 export type FormData = {
