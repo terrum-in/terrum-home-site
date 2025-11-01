@@ -76,7 +76,7 @@ const DynamicForm: React.FC<{
         amount: order.amount,
         currency: order.currency,
         name: "Terrum",
-        description: "Test Transaction",
+        description: "Event registration transaction",
         order_id: order.id,
         handler: async function (response: any) {
           // Send POST request to capture payment
