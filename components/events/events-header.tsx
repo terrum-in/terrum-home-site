@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function LandingHeader() {
+export default function EventsHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -40,7 +40,7 @@ export default function LandingHeader() {
 
       {/* Desktop Navigation */}
       <div className="hidden md:flex items-center space-x-8">
-        {["Resources", "Events"].map((item) =>
+        {["Resources"].map((item) =>
           item === "Resources" ? (
             <a
               data-umami-event="Open Resources Dashboard"
@@ -49,7 +49,7 @@ export default function LandingHeader() {
               href="https://resources.terrum.in"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white hover:text-white/80 font-medium"
+              className="text-black hover:text-black/80 font-medium"
             >
               {item}
             </a>
@@ -57,7 +57,7 @@ export default function LandingHeader() {
             <Link
               key={item}
               href={`/${item.toLowerCase()}`}
-              className="text-white hover:text-white/80 font-medium"
+              className="text-black hover:text-black/80 font-medium"
             >
               {item}
             </Link>
@@ -67,7 +67,7 @@ export default function LandingHeader() {
 
       {/* Hamburger Icon */}
       <button
-        className="md:hidden text-white focus:outline-none"
+        className="md:hidden text-black focus:outline-none"
         onClick={toggleMenu}
       >
         <svg
@@ -75,7 +75,7 @@ export default function LandingHeader() {
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth="2"
-          stroke="currentColor"
+          stroke="black"
           className="w-6 h-6"
         >
           <path
@@ -88,13 +88,13 @@ export default function LandingHeader() {
 
       {/* Mobile Navigation Sheet */}
       <div
-        className={`fixed top-0 left-0 w-full h-full bg-black text-white transform ${
+        className={`fixed top-0 left-0 w-full h-full bg-black text-black transform ${
           isMenuOpen ? "translate-y-0" : "-translate-y-full"
         } transition-transform duration-300 ease-in-out`}
       >
         {/* Close Button */}
         <button
-          className="absolute top-8 right-8 text-white focus:outline-none"
+          className="absolute top-8 right-8 text-black focus:outline-none"
           onClick={closeMenu}
         >
           <svg
@@ -102,7 +102,7 @@ export default function LandingHeader() {
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth="2"
-            stroke="currentColor"
+            stroke="white"
             className="w-6 h-6"
           >
             <path
@@ -117,48 +117,18 @@ export default function LandingHeader() {
         <div className="flex flex-col items-center justify-center h-full space-y-8">
           {[
             "Resources",
-            "Events",
-            "#events-and-experiences-section",
-            "#employee-engagement-section",
-            "#support-a-social-organisation-section",
-            "#open-source-database-section",
           ].map((item) => {
+            const href =
+              item === "Resources" ? "https://resources.terrum.in" : `${item}`;
 
-            if (item === "Resources") {
-              return (
-                <a
-                  key={item}
-                  href="https://resources.terrum.in"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white hover:text-white/80 font-medium"
-                  onClick={closeMenu}
-                >
-                  {formatSectionName(item)}
-                </a>
-              );
-            }
-
-            if (item === "Events") {
-              return (
-                <Link
-                  key={item}
-                  href="/events"
-                  className="text-white hover:text-white/80 font-medium"
-                  onClick={closeMenu}
-                >
-                  {item}
-                </Link>
-              );
-            }
-
-            // Anchor links for on-page sections
             return (
               <a
                 key={item}
-                href={item}
+                href={href}
+                target={item === "Resources" ? "_blank" : "_self"} // Open external links in a new tab
+                rel={item === "Resources" ? "noopener noreferrer" : ""}
                 className="text-white hover:text-white/80 font-medium"
-                onClick={closeMenu}
+                onClick={closeMenu} // Close menu when clicked
               >
                 {formatSectionName(item)}
               </a>
